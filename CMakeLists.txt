@@ -10,9 +10,7 @@ set(CMAKE_C_EXTENSIONS ON)#启用C标准扩展,想用POSIX标准扩展
 message("--CMAKE_C_COMPILE_FEATURES:${CMAKE_C_COMPILE_FEATURES}")
 message("--C_EXTENSIONS: ${C_EXTENSIONS}")
 message("--CMAKE_C_EXTENSIONS_DEFAULT:${CMAKE_C_EXTENSIONS_DEFAULT}")
-if(MSVC)
-add_compile_options("/utf-8")
-endif(MSVC)
+
 
 set(c_path_prefix ${CMAKE_CURRENT_SOURCE_DIR}/src/API_C)
 set(cpp_path_prefix ${CMAKE_CURRENT_SOURCE_DIR}/src/API_CPP)
@@ -25,6 +23,7 @@ set_target_properties(interface_c PROPERTIES
     POSITION_INDEPENDENT_CODE ON
 )
 if(MSVC)
+    add_compile_options("/utf-8")
     target_compile_definitions(interface_c PUBLIC DLIB_EXPORT)
 endif(MSVC)
 
@@ -36,9 +35,7 @@ target_compile_definitions(interface_c PRIVATE _FILE_OFFSET_BITS=64)
 set(interface_cpp_src ${cpp_path_prefix}/interfacecpp.cpp)
 
 add_library(interface_cpp SHARED ${interface_cpp_src})
-if(MSVC)
-    target_compile_definitions(interface_cpp PUBLIC DLIB_EXPORT)
-endif(MSVC)
+target_link_libraries(interface_cpp PUBLIC interface_c)
 
 set(d_global_src SHARED ${CMAKE_CURRENT_SOURCE_DIR}/src/d_global.cpp)
 
@@ -46,4 +43,4 @@ add_library(d_global ${d_global_src})
 
 target_include_directories(d_global PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-target_link_libraries(d_global PUBLIC interface_cpp PUBLIC interface_c)
+target_link_libraries(d_global PUBLIC interface_cpp)
