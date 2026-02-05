@@ -24,6 +24,9 @@ set_target_properties(interface_c PROPERTIES
     LINKER_LANGUAGE C
     POSITION_INDEPENDENT_CODE ON
 )
+if(MSVC)
+    target_compile_definitions(interface_c PUBLIC DLIB_EXPORT)
+endif(MSVC)
 
 get_target_property(D_CEXTENSIONS interface_c C_EXTENSIONS)
 message("--D_CEXTENSIONS:${D_CEXTENSIONS}")
@@ -33,7 +36,9 @@ target_compile_definitions(interface_c PRIVATE _FILE_OFFSET_BITS=64)
 set(interface_cpp_src ${cpp_path_prefix}/interfacecpp.cpp)
 
 add_library(interface_cpp SHARED ${interface_cpp_src})
-
+if(MSVC)
+    target_compile_definitions(interface_cpp PUBLIC DLIB_EXPORT)
+endif(MSVC)
 
 set(d_global_src SHARED ${CMAKE_CURRENT_SOURCE_DIR}/src/d_global.cpp)
 

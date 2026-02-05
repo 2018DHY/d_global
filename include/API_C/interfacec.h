@@ -1,26 +1,7 @@
 #ifndef INTERFACEC
 #define INTERFACEC
 
-#ifdef __cplusplus
-#define EXTERN_C_BEGIN \
-    extern "C"         \
-    {
-#define EXTERN_C_END }
-#define INLINE inline
-#else
-#define EXTERN_C_BEGIN 
-#define EXTERN_C_END 
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-#define INLINE inline
-#else
-#define INLINE
-#endif
-#endif
-#ifdef DLIB_EXPORT
-#define DLIB_API_EXPORT __declspec(dllexport)
-#else
-#define DLIB_API_EXPORT
-#endif
+#include "../commom.h"
 
 EXTERN_C_BEGIN
 // #define _FILE_OFFSET_BITS 64
@@ -29,6 +10,7 @@ EXTERN_C_BEGIN
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdint.h>
 
     // int a = 0;
     void c_say_hello();
@@ -48,7 +30,7 @@ typedef enum
 #endif
 
 // 3. 核心日志函数
-void log_output(LogLevel level, const char *file, const char *func, int line, const char *fmt, ...);
+DLIB_API_EXPORT void log_output(LogLevel level, const char *file, const char *func, int line, const char *fmt, ...);
 
 // 4. 为每个日志级别创建便捷的宏
 #define CLOG_DEBUG(fmt, ...) log_output(LOG_DEBUG, __FILE__, __func__, __LINE__, fmt, ##__VA_ARGS__)
@@ -60,29 +42,29 @@ void log_output(LogLevel level, const char *file, const char *func, int line, co
 
     struct buf_ary
 {
-    u_int64_t size;
-    u_int64_t capacity;
+    uint64_t size;
+    uint64_t capacity;
     char *dt;
 };
 //需要改为外部控制capacity
 
 /// @brief 获得一个初始容器capacity大小,size为0的buf_ary实例
-struct buf_ary *get_bfry(u_int64_t capacity);
+DLIB_API_EXPORT struct buf_ary *get_bfry(uint64_t capacity);
 
 /// @brief 给buf扩容
 /// @param buf 
 /// @param capacity 
 /// @return 
-bool scale_bfry(struct buf_ary **buf,u_int64_t  capacity);
+DLIB_API_EXPORT bool scale_bfry(struct buf_ary **buf,uint64_t  capacity);
 
 /// @brief 给ori追加内容
 /// @param ori 
 /// @param cnt 
 /// @param cnt_sz 
 /// @return 
-bool bfry_apd(struct buf_ary ** ori,const char* cnt,u_int64_t cnt_sz);
+DLIB_API_EXPORT bool bfry_apd(struct buf_ary ** ori,const char* cnt,uint64_t cnt_sz);
 
-void bfry_free(struct buf_ary **buf);
+DLIB_API_EXPORT void bfry_free(struct buf_ary **buf);
 
 
 /**
@@ -93,33 +75,33 @@ void bfry_free(struct buf_ary **buf);
  * free是代表是否要帮你释放src1（当前无用）
  */
 
-int64_t dg_append(char **rt, char *src1, int64_t c1_len, char *src2, int64_t c2_len, bool free);
+DLIB_API_EXPORT int64_t dg_append(char **rt, char *src1, int64_t c1_len, char *src2, int64_t c2_len, bool free);
 
-void dg_append_free(char *ptr);
+DLIB_API_EXPORT void dg_append_free(char *ptr);
 /**
  * 以二进制方式将读取文件所有内容
  * path为文件路径
  * rt为文件所有内容
  */
 
-int64_t dg_read_all(char *path, char **rt);
+DLIB_API_EXPORT int64_t dg_read_all(char *path, char **rt);
 
-void dg_read_all_free(char *ptr);
+DLIB_API_EXPORT void dg_read_all_free(char *ptr);
 
 /**
  * 以二进制方式读取所有内容 不同实现
  * path为文件路径
  * rt为文件所有内容
  */
-int64_t f_read_all(const char *const path, char **rt);
+DLIB_API_EXPORT int64_t f_read_all(const char *const path, char **rt);
 
-void f_read_all_free(char *ptr);
+DLIB_API_EXPORT void f_read_all_free(char *ptr);
 
-int64_t fd_read_all(FILE* fd,char **rt,bool ex);
+DLIB_API_EXPORT int64_t fd_read_all(FILE* fd,char **rt,bool ex);
 
 
-int64_t f_read_line(FILE *fd,char ** rt,bool ex);
-void f_read_line_free(char*prt);
+DLIB_API_EXPORT int64_t f_read_line(FILE *fd,char ** rt,bool ex);
+DLIB_API_EXPORT void f_read_line_free(char*prt);
 
 EXTERN_C_END
 #endif /* INTERFACEC */
