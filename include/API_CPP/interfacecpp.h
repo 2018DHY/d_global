@@ -9,6 +9,39 @@
 #include <string>
 #include <vector>
 
+#include <bit>
+#include <concepts>
+#include <cstdint>
+#include <type_traits>
+
+template <std::integral T>
+constexpr T dToBigEndian(T value) noexcept {
+    if constexpr (std::endian::native == std::endian::big) {
+        // 如果系统本身就是大端序，直接返回
+        return value;
+    } else {
+        // 如果是小端序，交换字节
+        return std::byteswap(value);
+    }
+};
+
+
+template <std::integral T>
+constexpr T dFromBigEndian(T big_endian_value) noexcept {
+    // 如果当前系统是大端序，big-endian值就是原生值，直接返回
+    if constexpr (std::endian::native == std::endian::big) {
+        return big_endian_value;
+    }
+    // 如果是小端序，需要交换字节
+    else if constexpr (std::endian::native == std::endian::little) {
+        return std::byteswap(big_endian_value);
+    }
+    // 处理混合字节序的情况（理论上很少见，保持原样）
+    else {
+        return big_endian_value;
+    }
+};
+
 void cpp_say_hello();
 // void TLog(const std::string &x);
 

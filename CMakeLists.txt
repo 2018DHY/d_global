@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1...4.1)
 project(dlib)
 message("---------------dlib--------------------")
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 
 set(CMAKE_C_EXTENSIONS ON)#启用C标准扩展,想用POSIX标准扩展
 
