@@ -14,6 +14,8 @@
 #include <cstdint>
 #include <type_traits>
 
+void cpp_say_hello();
+
 template <std::integral T>
 constexpr T dToBigEndian(T value) noexcept {
     if constexpr (std::endian::native == std::endian::big) {

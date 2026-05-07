@@ -1,7 +1,7 @@
 #ifndef D_GLOBAL
 #define D_GLOBAL
-#include "API_CPP/interfacecpp.h"
-#include "API_C/interfacec.h"
+#include "d_capi.h"
+#include "d_cppapi.h"
 #include "commom.h"
 
 DLIB_API_EXPORT void d_global_sayhello();

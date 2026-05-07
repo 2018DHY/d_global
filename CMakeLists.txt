@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1...4.1)
 
-project(dlib)
+project(dlib C CXX)
 message("---------------dlib--------------------")
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 23)
@@ -44,3 +44,6 @@ add_library(d_global ${d_global_src})
 target_include_directories(d_global PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_link_libraries(d_global PUBLIC interface_cpp)
+
+
+add_subdirectory(test)
