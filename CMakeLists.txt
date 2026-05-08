@@ -15,8 +15,11 @@ message("--CMAKE_C_EXTENSIONS_DEFAULT:${CMAKE_C_EXTENSIONS_DEFAULT}")
 set(c_path_prefix ${CMAKE_CURRENT_SOURCE_DIR}/src/API_C)
 set(cpp_path_prefix ${CMAKE_CURRENT_SOURCE_DIR}/src/API_CPP)
 
-set(interface_c_src ${c_path_prefix}/interfacec.c)
+set(interface_c_src ${c_path_prefix}/interfacec.c ${c_path_prefix}/bytearray.c)
+set(interface_cpp_src ${cpp_path_prefix}/interfacecpp.cpp)
 
+
+#c
 add_library(interface_c SHARED ${interface_c_src})
 set_target_properties(interface_c PROPERTIES
     LINKER_LANGUAGE C
@@ -32,8 +35,7 @@ message("--D_CEXTENSIONS:${D_CEXTENSIONS}")
 target_compile_definitions(interface_c PRIVATE _FILE_OFFSET_BITS=64)
 
 
-set(interface_cpp_src ${cpp_path_prefix}/interfacecpp.cpp)
-
+#cpp
 add_library(interface_cpp SHARED ${interface_cpp_src})
 target_link_libraries(interface_cpp PUBLIC interface_c)
 

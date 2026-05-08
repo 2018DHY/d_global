@@ -40,33 +40,6 @@ DLIB_API_EXPORT void log_output(LogLevel level, const char *file, const char *fu
 
 
 
-    struct buf_ary
-{
-    uint64_t size;
-    uint64_t capacity;
-    char *dt;
-};
-//需要改为外部控制capacity
-
-/// @brief 获得一个初始容器capacity大小,size为0的buf_ary实例
-DLIB_API_EXPORT struct buf_ary *get_bfry(uint64_t capacity);
-
-/// @brief 给buf扩容
-/// @param buf 
-/// @param capacity 
-/// @return 
-DLIB_API_EXPORT bool scale_bfry(struct buf_ary **buf,uint64_t  capacity);
-
-/// @brief 给ori追加内容
-/// @param ori 
-/// @param cnt 
-/// @param cnt_sz 
-/// @return 
-DLIB_API_EXPORT bool bfry_apd(struct buf_ary ** ori,const char* cnt,uint64_t cnt_sz);
-
-DLIB_API_EXPORT void bfry_free(struct buf_ary **buf);
-
-
 /**
  * 返回两个字符串拼接后的大小,若为0则失败
  * rt为拼接后的字符串指针
