@@ -31,6 +31,8 @@ DLIB_API_EXPORT bool btry_apd(struct byte_array * ori,struct byte_array *cnt);
 DLIB_API_EXPORT struct byte_array* btry_mid(struct byte_array * ori,uint64_t pos);
 DLIB_API_EXPORT struct byte_array* btry_mid_len(struct byte_array * ori,uint64_t pos,uint64_t lenth);
 
+DLIB_API_EXPORT struct byte_array* btry_indexof(struct byte_array * ori,const char* pattern);
+
 DLIB_API_EXPORT void btry_free(struct byte_array *buf);
 
 #endif /* BYTEARRAY */
