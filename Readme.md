@@ -1,0 +1,9 @@
+c库使用类型,显式提示类型字节长度
+int8_t
+uint8_t
+int16_t
+uint16_t
+int32_t
+uint32_t
+int64_t
+uint64_t

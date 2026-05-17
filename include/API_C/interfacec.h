@@ -2,6 +2,7 @@
 #define INTERFACEC
 
 #include "../commom.h"
+#include "bytearray.h"
 
 EXTERN_C_BEGIN
 // #define _FILE_OFFSET_BITS 64
@@ -18,15 +19,15 @@ EXTERN_C_BEGIN
     // 1. 定义日志级别
 typedef enum
 {
-    LOG_DEBUG,
     LOG_INFO,
+    LOG_DEBUG,
     LOG_ERROR,
     LOG_FATAL
 } LogLevel;
 
 // 2. 通过宏控制全局日志级别，默认为 INFO
 #ifndef CURRENT_LOG_LEVEL
-#define CURRENT_LOG_LEVEL LOG_INFO
+#define CURRENT_LOG_LEVEL LOG_DEBUG
 #endif
 
 // 3. 核心日志函数
