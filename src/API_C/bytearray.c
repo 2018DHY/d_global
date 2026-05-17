@@ -177,12 +177,15 @@ DLIB_API_EXPORT struct byte_array *hexstrTohex_ary(const char *hex_str_)
 DLIB_API_EXPORT int64_t btry_indexof_hex(struct byte_array *self, uint64_t index, const char *pattern)
 {
     struct byte_array *hexs = hexstrTohex_ary(pattern);
-
     int64_t rt = -1;
+
+    if(index>self->size){
+        index=0;
+    }
     uint64_t hex_len = hexs->size;
     uint64_t j = 0;
     // BF算法 暴力匹配
-    for (uint64_t i = 0; i < (self->size - hex_len); i++)
+    for (uint64_t i = index; i < (self->size - hex_len); i++)
     {
         for (j = 0; j < hex_len; j++)
         {
@@ -191,9 +194,10 @@ DLIB_API_EXPORT int64_t btry_indexof_hex(struct byte_array *self, uint64_t index
                 break;
             }
         }
-        if (j == hex_len - 1)
+        if (j == hex_len)
         {
             rt = i;
+            break;
         }
     }
     btry_free(hexs);
