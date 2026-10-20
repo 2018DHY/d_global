@@ -15,10 +15,19 @@
 #define INLINE
 #endif
 #endif
-#ifdef DLIB_EXPORT
-#define DLIB_API_EXPORT __declspec(dllexport)
+#if defined(_MSC_VER) || defined(WIN64) || defined(_WIN64) || defined(__WIN64__) || defined(WIN32) \
+    || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#define LIB_EXPORT __declspec(dllexport)
+#define LIB_IMPORT __declspec(dllimport)
 #else
-#define DLIB_API_EXPORT
+#define LIB_EXPORT __attribute__((visibility("default")))
+#define LIB_IMPORT __attribute__((visibility("default")))
+#endif
+
+#ifdef DLIB_EXPORT
+#define DLIB_API LIB_EXPORT
+#else
+#define DLIB_API LIB_IMPORT
 #endif
 
 #endif /* COMMOM */

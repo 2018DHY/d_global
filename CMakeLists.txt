@@ -25,9 +25,9 @@ set_target_properties(interface_c PROPERTIES
     LINKER_LANGUAGE C
     POSITION_INDEPENDENT_CODE ON
 )
+target_compile_definitions(interface_c PUBLIC DLIB_EXPORT)
 if(MSVC)
     add_compile_options("/utf-8")
-    target_compile_definitions(interface_c PUBLIC DLIB_EXPORT)
 endif(MSVC)
 
 get_target_property(D_CEXTENSIONS interface_c C_EXTENSIONS)

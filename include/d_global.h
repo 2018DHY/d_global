@@ -4,6 +4,6 @@
 #include "d_cppapi.h"
 #include "commom.h"
 
-DLIB_API_EXPORT void d_global_sayhello();
+DLIB_API void d_global_sayhello();
 
 #endif /* D_GLOBAL */

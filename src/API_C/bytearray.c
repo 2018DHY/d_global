@@ -13,7 +13,7 @@ static const struct byte_array_ops baOps = {
     .mid_len = btry_mid_len,
     .indexof_hex = btry_indexof_hex};
 
-DLIB_API_EXPORT struct byte_array *init_btry(uint64_t capacity)
+struct byte_array *init_btry(uint64_t capacity)
 {
     if (capacity > 0)
     {
@@ -30,7 +30,7 @@ DLIB_API_EXPORT struct byte_array *init_btry(uint64_t capacity)
     return NULL;
 }
 
-DLIB_API_EXPORT bool scale_btry(struct byte_array *self, uint64_t capacity)
+bool scale_btry(struct byte_array *self, uint64_t capacity)
 {
     if (self != NULL)
     {
@@ -56,7 +56,7 @@ DLIB_API_EXPORT bool scale_btry(struct byte_array *self, uint64_t capacity)
     return false;
 }
 
-DLIB_API_EXPORT bool btry_apd_byte(struct byte_array *self, uint8_t byte)
+bool btry_apd_byte(struct byte_array *self, uint8_t byte)
 {
     if (self->size + 1 > self->capacity)
         if (!self->ops->scale(self, self->capacity * 2))
@@ -70,22 +70,22 @@ DLIB_API_EXPORT bool btry_apd_byte(struct byte_array *self, uint8_t byte)
     return true;
 }
 
-DLIB_API_EXPORT struct byte_array *btry_mid(struct byte_array *self, uint64_t pos)
+struct byte_array *btry_mid(struct byte_array *self, uint64_t pos)
 {
     return NULL;
 }
 
-DLIB_API_EXPORT struct byte_array *btry_mid_len(struct byte_array *self, uint64_t pos, uint64_t lenth)
+struct byte_array *btry_mid_len(struct byte_array *self, uint64_t pos, uint64_t lenth)
 {
     return NULL;
 }
 
-DLIB_API_EXPORT bool btry_apd(struct byte_array *self, struct byte_array *other)
+bool btry_apd(struct byte_array *self, struct byte_array *other)
 {
     return false;
 }
 
-DLIB_API_EXPORT void btry_free(struct byte_array *buf)
+void btry_free(struct byte_array *buf)
 {
     if (buf != NULL)
     {
@@ -98,7 +98,7 @@ DLIB_API_EXPORT void btry_free(struct byte_array *buf)
     return;
 }
 
-DLIB_API_EXPORT uint8_t *str_trim(const char *str)
+uint8_t *str_trim(const char *str)
 {
     uint64_t str_len = strlen(str);
     uint8_t *rt = (uint8_t *)malloc(str_len);
@@ -119,7 +119,7 @@ DLIB_API_EXPORT uint8_t *str_trim(const char *str)
     return rt;
 }
 
-DLIB_API_EXPORT struct byte_array *hexstrTohex_ary(const char *hex_str_)
+struct byte_array *hexstrTohex_ary(const char *hex_str_)
 {
     uint8_t *hex_str = str_trim(hex_str_);
     uint64_t str_len = strlen(hex_str);
@@ -174,7 +174,7 @@ DLIB_API_EXPORT struct byte_array *hexstrTohex_ary(const char *hex_str_)
     return hex;
 }
 
-DLIB_API_EXPORT int64_t btry_indexof_hex(struct byte_array *self, uint64_t index, const char *pattern)
+int64_t btry_indexof_hex(struct byte_array *self, uint64_t index, const char *pattern)
 {
     struct byte_array *hexs = hexstrTohex_ary(pattern);
     int64_t rt = -1;

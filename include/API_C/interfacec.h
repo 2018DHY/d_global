@@ -14,7 +14,7 @@ EXTERN_C_BEGIN
 #include <stdint.h>
 
     // int a = 0;
-    void c_say_hello();
+    DLIB_API void c_say_hello();
 
     // 1. 定义日志级别
 typedef enum
@@ -31,7 +31,7 @@ typedef enum
 #endif
 
 // 3. 核心日志函数
-DLIB_API_EXPORT void log_output(LogLevel level, const char *file, const char *func, int line, const char *fmt, ...);
+DLIB_API void log_output(LogLevel level, const char *file, const char *func, int line, const char *fmt, ...);
 
 // 4. 为每个日志级别创建便捷的宏
 #define CLOG_DEBUG(fmt, ...) log_output(LOG_DEBUG, __FILE__, __func__, __LINE__, fmt, ##__VA_ARGS__)
@@ -49,33 +49,33 @@ DLIB_API_EXPORT void log_output(LogLevel level, const char *file, const char *fu
  * free是代表是否要帮你释放src1（当前无用）
  */
 
-DLIB_API_EXPORT int64_t dg_append(char **rt, char *src1, int64_t c1_len, char *src2, int64_t c2_len, bool free);
+DLIB_API int64_t dg_append(char **rt, char *src1, int64_t c1_len, char *src2, int64_t c2_len, bool free);
 
-DLIB_API_EXPORT void dg_append_free(char *ptr);
+DLIB_API void dg_append_free(char *ptr);
 /**
  * 以二进制方式将读取文件所有内容
  * path为文件路径
  * rt为文件所有内容
  */
 
-DLIB_API_EXPORT int64_t dg_read_all(char *path, char **rt);
+DLIB_API int64_t dg_read_all(char *path, char **rt);
 
-DLIB_API_EXPORT void dg_read_all_free(char *ptr);
+DLIB_API void dg_read_all_free(char *ptr);
 
 /**
  * 以二进制方式读取所有内容 不同实现
  * path为文件路径
  * rt为文件所有内容
  */
-DLIB_API_EXPORT int64_t f_read_all(const char *const path, char **rt);
+DLIB_API int64_t f_read_all(const char *const path, char **rt);
 
-DLIB_API_EXPORT void f_read_all_free(char *ptr);
+DLIB_API void f_read_all_free(char *ptr);
 
-DLIB_API_EXPORT int64_t fd_read_all(FILE* fd,char **rt,bool ex);
+DLIB_API int64_t fd_read_all(FILE* fd,char **rt,bool ex);
 
 
-DLIB_API_EXPORT int64_t f_read_line(FILE *fd,char ** rt,bool ex);
-DLIB_API_EXPORT void f_read_line_free(char*prt);
+DLIB_API int64_t f_read_line(FILE *fd,char ** rt,bool ex);
+DLIB_API void f_read_line_free(char*prt);
 
 EXTERN_C_END
 #endif /* INTERFACEC */
