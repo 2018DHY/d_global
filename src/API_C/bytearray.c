@@ -1,5 +1,4 @@
-#include "../../include/API_C/bytearray.h"
-#include "../../include/API_C/interfacec.h"
+#include "bytearray.h"
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
@@ -72,7 +71,21 @@ bool btry_apd_byte(struct byte_array *self, uint8_t byte)
 
 struct byte_array *btry_mid(struct byte_array *self, uint64_t pos)
 {
-    return NULL;
+    struct byte_array * rt=NULL;
+    if (pos > self->size - 1)
+    {
+        return NULL;
+    }
+    else
+    {
+        uint64_t len = (self->size - 1) - pos + 1;
+        if(len > DEF_CPT){
+            rt =init_btry(len + DEF_CPT);//比实际复制的字节容量多了DEF_CPT大小
+            memcpy(rt->dt,self->dt+pos,len);
+            rt->size=len;
+            return rt;
+        }
+    }
 }
 
 struct byte_array *btry_mid_len(struct byte_array *self, uint64_t pos, uint64_t lenth)
@@ -179,8 +192,9 @@ int64_t btry_indexof_hex(struct byte_array *self, uint64_t index, const char *pa
     struct byte_array *hexs = hexstrTohex_ary(pattern);
     int64_t rt = -1;
 
-    if(index>self->size){
-        index=0;
+    if (index > self->size)
+    {
+        index = 0;
     }
     uint64_t hex_len = hexs->size;
     uint64_t j = 0;

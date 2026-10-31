@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <d_capi.h>
+#include <interfacec.h>
 
 
 int main(int argc,char** argv){

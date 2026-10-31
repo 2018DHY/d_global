@@ -15,7 +15,10 @@ message("--CMAKE_C_EXTENSIONS_DEFAULT:${CMAKE_C_EXTENSIONS_DEFAULT}")
 set(c_path_prefix ${CMAKE_CURRENT_SOURCE_DIR}/src/API_C)
 set(cpp_path_prefix ${CMAKE_CURRENT_SOURCE_DIR}/src/API_CPP)
 
-set(interface_c_src ${c_path_prefix}/interfacec.c ${c_path_prefix}/bytearray.c)
+set(interface_c_src ${c_path_prefix}/interfacec.c 
+                    ${c_path_prefix}/bytearray.c
+                    ${c_path_prefix}/dlog.c
+                    ${c_path_prefix}/dfile.c)
 set(interface_cpp_src ${cpp_path_prefix}/interfacecpp.cpp)
 
 
@@ -26,6 +29,8 @@ set_target_properties(interface_c PROPERTIES
     POSITION_INDEPENDENT_CODE ON
 )
 target_compile_definitions(interface_c PUBLIC DLIB_EXPORT)
+target_include_directories(interface_c PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(interface_c PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/API_C)
 if(MSVC)
     add_compile_options("/utf-8")
 endif(MSVC)
@@ -38,14 +43,6 @@ target_compile_definitions(interface_c PRIVATE _FILE_OFFSET_BITS=64)
 #cpp
 add_library(interface_cpp SHARED ${interface_cpp_src})
 target_link_libraries(interface_cpp PUBLIC interface_c)
-
-set(d_global_src SHARED ${CMAKE_CURRENT_SOURCE_DIR}/src/d_global.cpp)
-
-add_library(d_global ${d_global_src})   
-
-target_include_directories(d_global PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-target_link_libraries(d_global PUBLIC interface_cpp)
 
 
 add_subdirectory(test)

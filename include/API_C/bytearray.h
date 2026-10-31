@@ -1,6 +1,8 @@
 #ifndef BYTEARRAY
 #define BYTEARRAY
-#include "../commom.h"
+//byte_array的构成是想得到一个轻量的QByteArray实现
+#include "commom.h"
+#include "dlog.h"
 #include <stdint.h>
 #include <stdbool.h>
 const static uint16_t DEF_CPT = 1024; // default capacity
@@ -24,7 +26,7 @@ struct byte_array_ops
     int64_t (*indexof_hex)(struct byte_array *self, uint64_t index, const char *pattern);
 };
 
-/// @brief 获得一个初始容器capacity大小,size为0的buf_ary实例
+/// @brief 获得一个初始容器capacity大小,size为0的buf_ary实例,容器内字节已初始化为0x00;
 DLIB_API struct byte_array *init_btry(uint64_t capacity);
 
 /// @brief 给buf扩容
@@ -41,7 +43,12 @@ DLIB_API bool btry_apd(struct byte_array *self, struct byte_array *other);
 
 DLIB_API bool btry_apd_byte(struct byte_array *self, uint8_t byte);
 
+/// @brief 返回一个从pos开始到本byte_array结束的新的byte_array对象,若pos位置非法,则返回空指针
+/// @param pos 数组中的起始位置
 DLIB_API struct byte_array *btry_mid(struct byte_array *self, uint64_t pos);
+/// @brief 返回一个从pos开始总长为lenth的新的byte_array对象,若pos位置非法,则返回空指针
+/// @brief 若pos+lenth>=size,则返回从pos开始到本数组结束
+/// @param pos 数组中的起始位置
 DLIB_API struct byte_array *btry_mid_len(struct byte_array *self, uint64_t pos, uint64_t lenth);
 
 DLIB_API uint8_t *str_trim(const char *str);
