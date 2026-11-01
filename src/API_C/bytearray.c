@@ -4,15 +4,23 @@
 #include <string.h>
 #include <ctype.h>
 
+// 1024 * 1024 = 2^20  ==> 1MB
+// 1024 * 1024 *1024 = 2^30  ==> 1GB
+// 1024 * 1024 *1024 * 2= 2^31  ==> 2GB    int32_t
+// 1024 * 1024 *1024 * 4= 2^32  ==> 4GB
+// 2 ^ 32 = 4,294,967,296 约42亿
+// 2 ^ 33 = 8,589,934,592 约85亿
+// 2^30 * 2 ^ 33 = 2 ^ 63 = 1GB * 85亿
+
 static const struct byte_array_ops baOps = {
-    .scale = scale_btry,
+    .scale = btry_scale,
     .apd_byte = btry_apd_byte,
     .append = btry_apd,
     .mid = btry_mid,
     .mid_len = btry_mid_len,
     .indexof_hex = btry_indexof_hex};
 
-struct byte_array *init_btry(uint64_t capacity)
+struct byte_array *init_btry(int64_t capacity)
 {
     if (capacity > 0)
     {
@@ -29,7 +37,7 @@ struct byte_array *init_btry(uint64_t capacity)
     return NULL;
 }
 
-bool scale_btry(struct byte_array *self, uint64_t capacity)
+bool btry_scale(struct byte_array *self, int64_t capacity)
 {
     if (self != NULL)
     {
@@ -69,32 +77,84 @@ bool btry_apd_byte(struct byte_array *self, uint8_t byte)
     return true;
 }
 
-struct byte_array *btry_mid(struct byte_array *self, uint64_t pos)
+struct byte_array *btry_mid(struct byte_array *self, int64_t pos)
 {
-    struct byte_array * rt=NULL;
-    if (pos > self->size - 1)
+    struct byte_array *rt = NULL;
+    if (pos < 0 || pos > self->size - 1) // 如果位置小于0或超过数组最后位置
     {
         return NULL;
     }
     else
     {
-        uint64_t len = (self->size - 1) - pos + 1;
-        if(len > DEF_CPT){
-            rt =init_btry(len + DEF_CPT);//比实际复制的字节容量多了DEF_CPT大小
-            memcpy(rt->dt,self->dt+pos,len);
-            rt->size=len;
-            return rt;
+        //    pos   end
+        //     |     |
+        // 0 1 2 3 4 5
+        int64_t len = (self->size - 1) - pos + 1;
+        int64_t cap = DEF_CPT; // 容量
+        if (len > DEF_CPT)
+        {
+            cap = len + cap; // 比实际复制的字节容量多了DEF_CPT大小
         }
+        rt = init_btry(cap);
+        memcpy(rt->dt, self->dt + pos, len);
+        rt->size = len;
+        return rt;
     }
 }
 
-struct byte_array *btry_mid_len(struct byte_array *self, uint64_t pos, uint64_t lenth)
+struct byte_array *btry_mid_len(struct byte_array *self, int64_t pos, int64_t lenth)
 {
+    struct byte_array *rt = NULL;
+    if (pos < 0 || pos > self->size - 1 || lenth < 1) // 如果位置小于0或超过数组最后位置,或长度小与等于0
+    {
+        return NULL;
+    }
+    else
+    {
+        int64_t end = pos + lenth;
+        if (end > self->size)
+        {
+            return self->ops->mid(self, pos);
+        }
+        else
+        {
+            int64_t cap = DEF_CPT; // 容量
+            if (lenth > DEF_CPT)
+            {
+                cap = lenth + cap;
+            }
+            rt = init_btry(cap);
+            memcpy(rt->dt, self->dt + pos, lenth);
+            rt->size = lenth;
+            return rt;
+        }
+    }
     return NULL;
 }
 
 bool btry_apd(struct byte_array *self, struct byte_array *other)
 {
+    if (self == NULL && other == NULL)
+    {
+        return false;
+    }
+    else
+    {
+        if (other->size > 0)
+        {
+            int64_t aft_len = self->size + other->size;
+            if (aft_len > self->capacity)//如果追加后长度大于当前容量,先扩容
+            {
+                if (!btry_scale(self, aft_len + DEF_CPT))
+                {
+                    return false;
+                }
+            }
+            memcpy(self->dt+self->size,other->dt,other->size);
+            self->size=aft_len;
+            return true;
+        }
+    }
     return false;
 }
 
@@ -113,14 +173,14 @@ void btry_free(struct byte_array *buf)
 
 uint8_t *str_trim(const char *str)
 {
-    uint64_t str_len = strlen(str);
+    int64_t str_len = strlen(str);
     uint8_t *rt = (uint8_t *)malloc(str_len);
     if (rt == NULL)
     {
         return NULL;
     }
-    uint64_t j = 0;
-    for (uint64_t i = 0; i < str_len; i++)
+    int64_t j = 0;
+    for (int64_t i = 0; i < str_len; i++)
     {
         if (isspace(str[i]))
         {
@@ -135,7 +195,7 @@ uint8_t *str_trim(const char *str)
 struct byte_array *hexstrTohex_ary(const char *hex_str_)
 {
     uint8_t *hex_str = str_trim(hex_str_);
-    uint64_t str_len = strlen(hex_str);
+    int64_t str_len = strlen(hex_str);
     const char *c_type = setlocale(LC_CTYPE, NULL);
     CLOG_INFO("LC_CTYPE is %s", c_type);
     if ((str_len % 2) != 0)
@@ -146,7 +206,7 @@ struct byte_array *hexstrTohex_ary(const char *hex_str_)
     struct byte_array *hex = init_btry(DEF_CPT);
     uint8_t one_byte = 0;
     uint8_t temp;
-    for (uint64_t i = 0; i < str_len; i++)
+    for (int64_t i = 0; i < str_len; i++)
     {
         temp = 0;
         if (isdigit(hex_str[i]))
@@ -187,7 +247,7 @@ struct byte_array *hexstrTohex_ary(const char *hex_str_)
     return hex;
 }
 
-int64_t btry_indexof_hex(struct byte_array *self, uint64_t index, const char *pattern)
+int64_t btry_indexof_hex(struct byte_array *self, int64_t index, const char *pattern)
 {
     struct byte_array *hexs = hexstrTohex_ary(pattern);
     int64_t rt = -1;
@@ -196,10 +256,10 @@ int64_t btry_indexof_hex(struct byte_array *self, uint64_t index, const char *pa
     {
         index = 0;
     }
-    uint64_t hex_len = hexs->size;
-    uint64_t j = 0;
+    int64_t hex_len = hexs->size;
+    int64_t j = 0;
     // BF算法 暴力匹配
-    for (uint64_t i = index; i < (self->size - hex_len); i++)
+    for (int64_t i = index; i < (self->size - hex_len); i++)
     {
         for (j = 0; j < hex_len; j++)
         {
@@ -215,5 +275,6 @@ int64_t btry_indexof_hex(struct byte_array *self, uint64_t index, const char *pa
         }
     }
     btry_free(hexs);
+    hexs = NULL;
     return rt;
 }

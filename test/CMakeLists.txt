@@ -10,3 +10,4 @@ target_link_libraries(byte_array_test PUBLIC interface_c)
 
 
 #cpp function unit test
+add_executable(cpp_hello_test ./cpp_test/cpp_hello_test.cpp)

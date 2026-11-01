@@ -22,6 +22,7 @@ int main(int argc,char** argv){
     for(int i=0;i<count;i++){
         printf("pos[%d]:%ld\n",i,pos_s[i]);
     }
+    btry_free(hexs);
     
     return 0;
 }
